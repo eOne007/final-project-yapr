@@ -1,10 +1,11 @@
 package api
 
 import (
-	repeater "final-project-yapr/internal"
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/eOne007/final-project-yapr/internal/repeater"
 )	
 
 	const dFormat = "20060102"

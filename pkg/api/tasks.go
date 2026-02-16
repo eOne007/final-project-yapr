@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"final-project-yapr/pkg/db"
+	"github.com/eOne007/final-project-yapr/pkg/db"
 )
 
 // TasksResp — структура ответа для списка задач, используем для сериализации в JSON

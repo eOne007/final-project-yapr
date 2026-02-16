@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"final-project-yapr/pkg/api"
-	"final-project-yapr/pkg/db"
+	"github.com/eOne007/final-project-yapr/pkg/api"
+	"github.com/eOne007/final-project-yapr/pkg/db"
 )
 
 // getPort возвращает порт для запуска сервера

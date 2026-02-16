@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"time"
 
-	repeater "final-project-yapr/internal"
-	"final-project-yapr/pkg/db"
+	"github.com/eOne007/final-project-yapr/internal/repeater"
+	"github.com/eOne007/final-project-yapr/pkg/db"
 )
 
-// taskHandler - марщрутизатор для эндпойнта /task
+// taskHandler - маршрутизатор для эндпойнта /task
 // Определяет метод запроса и вызывает соответствующий обработчик
 func taskHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
