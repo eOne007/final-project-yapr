@@ -19,9 +19,9 @@ func getPort() string {
 }
 
 func main() {
-	// получаем путь к БД из переменной окружения SCHEDULER_DB
+	// получаем путь к БД из переменной окружения TODO_DBFILE
 	// если переменнач не определена, используем файл из текущей директории
-	dbFile := os.Getenv("SCHEDULER_DB") 
+	dbFile := os.Getenv("TODO_DBFILE") 
 	if dbFile == "" {
     	dbFile = "scheduler.db"
 	}

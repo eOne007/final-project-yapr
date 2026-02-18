@@ -2,8 +2,6 @@ module github.com/eOne007/final-project-yapr
 
 go 1.24.0
 
-toolchain go1.24.6
-
 require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/stretchr/testify v1.11.1
