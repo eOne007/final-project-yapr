@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"time"
 )
+const DateFormat = "20060102"
+
 
 // Task - структура задачи в системе, соответствует записям в таблице БД
 type Task struct {
@@ -59,7 +61,7 @@ func Tasks(limit int) ([]*Task, error) {
 // TasksWithSearch получает список задач с возможностью поиска по дате или тексту
 func TasksWithSearch(limit int, search string) ([]*Task, error) {
 	if searchDate, err := time.Parse("02.01.2006", search); err == nil {
-		formattedDate := searchDate.Format("20060102")
+		formattedDate := searchDate.Format(DateFormat)
 		query := `SELECT id, date, title, comment, repeat
 			FROM scheduler WHERE date = ? 
 			ORDER BY date ASC LIMIT ?`

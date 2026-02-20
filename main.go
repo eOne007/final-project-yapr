@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -19,6 +20,12 @@ func getPort() string {
 }
 
 func main() {
+	if err := run(); err != nil {
+		log.Printf("Ошибка: %v", err)
+		os.Exit(1)
+	}
+}
+func run() error {
 	// получаем путь к БД из переменной окружения TODO_DBFILE
 	// если переменнач не определена, используем файл из текущей директории
 	dbFile := os.Getenv("TODO_DBFILE") 
@@ -27,7 +34,7 @@ func main() {
 	}
 
 	if err := db.Init(dbFile); err != nil {
-		log.Fatalf("DB error: %v", err)
+		return fmt.Errorf("DB error: %w", err)
 	}
 	defer db.DB.Close() // гарантированное закрытие соединения с БД при завершении программы
 
@@ -38,6 +45,7 @@ func main() {
 	port := getPort()
 	log.Printf("Запуск сервера на порту %s...", port)
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("server error: %w", err)
 	}
+	return nil
 }

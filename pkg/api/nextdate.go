@@ -6,14 +6,13 @@ import (
 	"time"
 
 	"github.com/eOne007/final-project-yapr/internal/repeater"
-)	
+	"github.com/eOne007/final-project-yapr/pkg/db"
+)
 
-	const dFormat = "20060102"
-
-	// nextDayHandler обрабатывает GET-запрос для вычисления следующей даты выполнения задачи
+// nextDayHandler обрабатывает GET-запрос для вычисления следующей даты выполнения задачи
 	func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			writeJson(w, http.StatusMethodNotAllowed, map[string]string{"error": "Method not allowed"})
 			return
 		}
 
@@ -22,12 +21,12 @@ import (
 		getRepeat := r.FormValue("repeat")
 
 		if getDate == "" {
-			http.Error(w, "Empty parameter: date", http.StatusBadRequest)
+			writeJson(w, http.StatusBadRequest, map[string]string{"error": "Empty parameter: date"})
 			return
 		}
 
 		if getRepeat == "" {
-			http.Error(w, "Empty parameter: repeat", http.StatusBadRequest)
+			writeJson(w, http.StatusBadRequest, map[string]string{"error": "Empty parameter: repeat"})
 			return
 		}
 
@@ -35,17 +34,18 @@ import (
 		
 		if getNow != "" {
 			var err error
-			now, err = time.Parse(dFormat, getNow)
+			now, err = time.Parse(db.DateFormat, getNow)
 			if err != nil {
-				http.Error(w, fmt.Sprintf("Invalid 'now' parameter: %v", err), http.StatusBadRequest)
+				writeJson(w, http.StatusBadRequest, map[string]string{"error": fmt.Sprintf("Invalid 'now' parameter: %v", err)})
 				return
 			}
 		}
 		nextDate, err := repeater.NextDate(now, getDate, getRepeat)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				writeJson(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 				return
 			}
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		fmt.Fprint(w, nextDate)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, nextDate) 
 	}

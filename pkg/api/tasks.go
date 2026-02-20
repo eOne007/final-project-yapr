@@ -6,6 +6,8 @@ import (
 	"github.com/eOne007/final-project-yapr/pkg/db"
 )
 
+const TasksLimit = 30
+
 // TasksResp — структура ответа для списка задач, используем для сериализации в JSON
 type TasksResp struct {
 	Tasks	[]*db.Task	`json:"tasks"`
@@ -19,7 +21,7 @@ type ErrorResp struct {
 // tasksHandler обрабатывает GET-запрос для получения списка задач
 // Реализован с воможностью поиска по заголовку
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
-	limit := 30 // устанавливаем лимит на количество возвращаемых задач
+	limit := TasksLimit // устанавливаем лимит на количество возвращаемых задач
 	search := r.URL.Query().Get("search")
 
 	var tasks []*db.Task
@@ -31,13 +33,12 @@ func tasksHandler(w http.ResponseWriter, r *http.Request) {
 		tasks, err = db.Tasks(limit)
 	}
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		writeJson(w, ErrorResp{Error: err.Error()})
+		writeJson(w, http.StatusInternalServerError, ErrorResp{Error: err.Error()})
 		return
 	}
 
 	if tasks == nil {
 		tasks = []*db.Task{}
 	}
-	writeJson(w, TasksResp{Tasks: tasks})
+	writeJson(w, http.StatusOK, TasksResp{Tasks: tasks})
 }

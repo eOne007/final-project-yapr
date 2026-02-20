@@ -10,11 +10,9 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o todo-planner .
 
 
-FROM ubuntu:latest
+FROM alpine:latest
 
-RUN apt-get update && \
-    apt-get install -y ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache ca-certificates
 
 WORKDIR /app
 
@@ -25,7 +23,5 @@ ENV TODO_PORT=7540
 ENV TODO_DBFILE=/database/scheduler.db
 
 RUN mkdir -p /database
-
-EXPOSE 7540
 
 CMD ["./todo-planner"]

@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/eOne007/final-project-yapr/pkg/db"
 )
 
 // AfterNow сравнивает две даты, возвращает true, если дата строго позже now
@@ -24,7 +26,7 @@ func AfterNow(date, now time.Time) bool {
 
 // NextDate возвращает следующую дату повторения задачи, с учетом начальной даты и правил повторения
 func NextDate(now time.Time, dstart string, repeat string) (string, error) {
-	date, err := time.Parse("20060102", dstart)
+	date, err := time.Parse(db.DateFormat, dstart)
 	if err != nil {
 		return "", fmt.Errorf("incorrect date format: %w", err)
 	}
@@ -64,7 +66,7 @@ func nextDailyDate(now time.Time, date time.Time, partsRepeat []string) (string,
 	for !AfterNow(date, now) {
 		date = date.AddDate(0, 0, numberOfDays)
 	}
-	return date.Format("20060102"), nil
+	return date.Format(db.DateFormat), nil
 }
 
 // nextWeeklyDate возвращает следующую дату для еженедельного правила по дням недели
@@ -86,7 +88,7 @@ func nextWeeklyDate(now time.Time, date time.Time, partsRepeat []string) (string
 				dayOfWeek = 7
 			}
 		if weekdays[dayOfWeek] && AfterNow(date, now) {
-			return date.Format("20060102"), nil
+			return date.Format(db.DateFormat), nil
 		}
 		date = date.AddDate(0, 0, 1)
 	}
@@ -152,7 +154,7 @@ func nextMonthlyDate(now time.Time, date time.Time, partsRepeat []string) (strin
 			(penultimateDay && day == lastDayofMonth - 1) ||
 			(lastDay && day == lastDayofMonth)) &&
 			AfterNow(date, now) {
-			return date.Format("20060102"), nil
+			return date.Format(db.DateFormat), nil
 		}
 		date = date.AddDate(0, 0, 1)
 	}
@@ -180,5 +182,5 @@ func nextYearlyDate(now time.Time, date time.Time) (string, error) {
 			date = time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 		}
 	}
-	return date.Format("20060102"), nil
+	return date.Format(db.DateFormat), nil
 }
